@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אודות - מאגר הפודקאסטים</title>
+    <title>אודות והצטרפות - מאגר הפודקאסטים</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap');
@@ -15,51 +15,85 @@
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-gradient-to-b from-indigo-500/10 to-transparent blur-3xl -z-10 rounded-full"></div>
 
     <div class="max-w-2xl w-full bg-white/80 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden text-center">
-        <!-- עיטור גרפי רקע -->
         <div class="absolute -top-16 -right-16 w-40 h-40 bg-indigo-50 rounded-full opacity-50 -z-10"></div>
         <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-purple-50 rounded-full opacity-50 -z-10"></div>
 
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white mb-8 shadow-lg shadow-indigo-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
         </div>
 
-        <h1 class="text-4xl md:text-5xl font-black mb-6 text-slate-900">אודות המאגר</h1>
+        <h1 class="text-4xl md:text-5xl font-black mb-6 text-slate-900">כניסה לחברי קבוצה</h1>
         
         <div class="space-y-6 text-slate-600 text-lg leading-relaxed mb-10 text-right bg-slate-50 p-6 rounded-2xl border border-slate-100">
-            <p>ברוכים הבאים למאגר הפודקאסטים המקיף. הפרויקט הזה מאגד בתוכו כמות אדירה של פודקאסטים ושיעורי שמע, ולא רק של יוצר אחד - אלא של <strong>מגוון רחב של יוצרים שונים ומשונים</strong> מכל רחבי הרשת.</p>
-            <p>כדי לשמור על קהילה איכותית וכדי שנוכל להמשיך לתחזק את המאגר ולהעלות תוכן חדש, <strong>ההאזנה לפרקים סגורה לחברי הקבוצה שלנו בלבד.</strong></p>
+            <p>מאגר הפודקאסטים סגור ופתוח להאזנה אך ורק לחברי הקבוצה שלנו כדי לשמור על קהילה איכותית.</p>
+            <p>אם אתם כבר בקבוצה, <strong>הזינו את קוד הגישה</strong> שפורסם שם כדי לפתוח את האתר.</p>
             
             <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-xl mt-4">
-                <h3 class="font-bold text-indigo-900 mb-2">איך מצטרפים?</h3>
-                <p class="text-indigo-800 text-base">ההצטרפות היא קלה ופשוטה. שלחו לנו הודעה בווצאפ או הצטרפו לקבוצה השקטה שלנו לקבלת עדכונים. לאחר מכן תוכלו לאשר כאן את הצטרפותכם.</p>
-                <!-- ניתן להחליף את הקישור הזה בקישור לקבוצה שלך -->
-                <a href="#" class="inline-block mt-3 font-bold text-indigo-600 hover:text-indigo-800 underline underline-offset-4">לחצו כאן למעבר לקבוצה</a>
+                <h3 class="font-bold text-indigo-900 mb-2">עוד לא בקבוצה?</h3>
+                <p class="text-indigo-800 text-base">הצטרפו לקבוצה השקטה שלנו לקבלת עדכונים וקוד הגישה לאתר.</p>
+                <!-- החלף את הקישור למטה לקישור הווצאפ שלך -->
+                <a href="#" class="inline-block mt-3 font-bold text-indigo-600 hover:text-indigo-800 underline underline-offset-4">לחצו כאן להצטרפות</a>
             </div>
         </div>
 
-        <!-- כפתור אישור הצטרפות -->
-        <button id="confirm-join-btn" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg flex items-center justify-center gap-3">
-            <span>אישרתי והצטרפתי לקבוצה, פתח לי את ההאזנה</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-        </button>
+        <!-- אזור הזנת סיסמה -->
+        <div class="max-w-sm mx-auto">
+            <input type="password" id="password-input" class="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-4 mb-4 text-center text-xl font-bold focus:outline-none focus:border-indigo-500 transition-colors shadow-sm" placeholder="הקש את סיסמת הקבוצה" dir="ltr">
+            
+            <button id="confirm-join-btn" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg flex items-center justify-center gap-3">
+                <span>פתיחת גישה למאגר</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            </button>
+            <p id="error-msg" class="text-red-500 font-bold mt-4 hidden">סיסמה שגויה. בדוק בקבוצה מהי הסיסמה העדכנית.</p>
+        </div>
         
-        <div class="mt-6">
+        <div class="mt-8">
             <a href="index.html" class="text-slate-400 hover:text-slate-600 font-medium transition-colors">חזרה לדף הראשי</a>
         </div>
     </div>
 
     <script>
-        document.getElementById('confirm-join-btn').addEventListener('click', function() {
-            // שומרים זיכרון בדפדפן שהמשתמש אישר את ההצטרפות
-            localStorage.setItem('isGroupMember', 'true');
+        document.getElementById('confirm-join-btn').addEventListener('click', async function() {
+            const btn = this;
+            const errorMsg = document.getElementById('error-msg');
+            const typedPassword = document.getElementById('password-input').value.trim();
             
-            // אפקט חזותי קצר לפני מעבר
-            this.innerHTML = 'הגישה נפתחה! מעביר אותך...';
-            this.classList.replace('bg-slate-900', 'bg-green-600');
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1000);
+            if (!typedPassword) return;
+
+            // נשנה את הכפתור למצב טעינה
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = 'בודק קוד...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            errorMsg.classList.add('hidden');
+
+            try {
+                // משיכת קובץ ההגדרות (עם מספר אקראי כדי למנוע שמירה בזיכרון המטמון)
+                const response = await fetch('config.json?v=' + new Date().getTime());
+                const config = await response.json();
+
+                if (typedPassword === config.groupPassword) {
+                    // סיסמה נכונה! שומרים בדפדפן ומעבירים לעמוד הראשי
+                    localStorage.setItem('site_password', typedPassword);
+                    btn.innerHTML = 'הגישה נפתחה! מעביר אותך...';
+                    btn.classList.replace('bg-slate-900', 'bg-green-600');
+                    setTimeout(() => window.location.href = 'index.html', 1000);
+                } else {
+                    // סיסמה שגויה
+                    errorMsg.classList.remove('hidden');
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+            } catch (err) {
+                errorMsg.textContent = "שגיאת תקשורת מול השרת. נסה שוב מאוחר יותר.";
+                errorMsg.classList.remove('hidden');
+                btn.innerHTML = originalHtml;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        });
+
+        // תמיכה בלחיצה על Enter
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('confirm-join-btn').click();
         });
     </script>
 </body>
