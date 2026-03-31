@@ -37,6 +37,30 @@
 </head>
 <body class="text-slate-800 min-h-screen relative overflow-x-hidden selection:bg-indigo-100 selection:text-indigo-900">
     
+    <!-- מסך פתיחה (Splash Screen) -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-700 bg-slate-900 overflow-hidden">
+        <!-- רקע מונפש -->
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 opacity-95"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/20 rounded-full blur-[80px] animate-pulse"></div>
+        
+        <!-- תוכן מרכזי -->
+        <div class="relative z-10 flex flex-col items-center fade-in">
+            <!-- אייקון עם אנימציית ריחוף -->
+            <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center backdrop-blur-md border border-white/10 mb-8 shadow-2xl shadow-indigo-500/20 transform animate-[bounce_3s_infinite]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 text-center drop-shadow-lg">
+                מאגר הפודקאסטים
+            </h1>
+            <div class="flex items-center gap-3 bg-white/5 px-5 py-2 rounded-full border border-white/5">
+                <div class="w-2 h-2 bg-indigo-400 rounded-full animate-ping"></div>
+                <p class="text-indigo-200 text-sm font-medium tracking-wide">מכין את חווית השמע...</p>
+            </div>
+        </div>
+    </div>
+
     <nav class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div class="font-black text-xl tracking-tight text-indigo-900 flex items-center gap-2">
@@ -80,10 +104,36 @@
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbyGIavueF5eYZP542khG6WSYztk-OA6wadPJp9pBiCvJpg--opvOmDm6iqvH4EWzoWGVA/exec'; 
         const ROOT_FOLDER_ID = '1YvJzJJlKzKMunkYQWAqwFGK6VElIW-WT';
         
-        // היסטוריית ניווט
+        // היסטוריית ניווט ומערכת זיכרון מטמון (Cache)
         let navigationStack = [{ id: ROOT_FOLDER_ID, name: 'ראשי' }];
+        let folderCache = {}; // שומר את כל התיקיות שכבר הורדנו
+        let activePrefetches = {}; // מנהל בקשות רקע שרצות כרגע
+        
         let isMember = false;
         let siteConfig = { groupPassword: "", announcement: "" };
+
+        // --- משתני מסך פתיחה חכם ---
+        let minSplashTimePassed = false;
+        let isRootLoaded = false;
+        let splashDismissed = false;
+
+        // הגדרת זמן מינימלי למסך הפתיחה (1.5 שניות בשביל היופי של האנימציה)
+        setTimeout(() => {
+            minSplashTimePassed = true;
+            checkAndHideSplash();
+        }, 1500);
+
+        // פונקציה שמעלימה את המסך רק כשגם הזמן עבר וגם הנתונים הגיעו מגוגל
+        function checkAndHideSplash() {
+            if (minSplashTimePassed && isRootLoaded && !splashDismissed) {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 700);
+                }
+                splashDismissed = true;
+            }
+        }
 
         async function initApp() {
             try {
@@ -95,7 +145,7 @@
                 isMember = (savedPassword === siteConfig.groupPassword && siteConfig.groupPassword !== "");
             } catch(e) { console.error("שגיאה בטעינת הגדרות", e); }
 
-            // נטען את התיקייה הראשונה
+            // נטען את התיקייה הראשונה - שימו לב שזה קורה כבר עכשיו, מתחת למסך הפתיחה!
             loadFolder(ROOT_FOLDER_ID);
         }
 
@@ -108,27 +158,88 @@
             const grid = document.getElementById('content-grid');
             const spinner = document.getElementById('loading-spinner');
             
-            grid.innerHTML = '';
-            spinner.classList.remove('hidden');
             document.getElementById('error-msg').classList.add('hidden');
-
             renderBreadcrumbs();
 
+            // 1. קסם המטמון: אם התיקייה כבר בזיכרון, נטען אותה מיד (אפס זמן טעינה!)
+            if (folderCache[folderId]) {
+                grid.innerHTML = '';
+                spinner.classList.add('hidden');
+                renderContent(folderCache[folderId].folders, folderCache[folderId].files);
+                return;
+            }
+
+            // 2. אם התיקייה לא בזיכרון, נציג ספינר ונטען אותה מגוגל
+            grid.innerHTML = '';
+            spinner.classList.remove('hidden');
+
             try {
-                // שולחים בקשה לסקריפט עם מזהה התיקייה הספציפית
-                const response = await fetch(`${GAS_URL}?folderId=${folderId}`);
-                if (!response.ok) throw new Error("שגיאת רשת");
-                const data = await response.json();
+                let data;
+                
+                // בדיקה אם המשתמש ריחף קודם על התיקייה והבקשה כבר רצה ברקע
+                if (activePrefetches[folderId]) {
+                    data = await activePrefetches[folderId];
+                } else {
+                    const response = await fetch(`${GAS_URL}?folderId=${folderId}`);
+                    if (!response.ok) throw new Error("שגיאת רשת");
+                    data = await response.json();
+                }
 
                 if (data.error) throw new Error(data.error);
+
+                // שומרים בזיכרון כדי שבפעם הבאה זה יהיה מיידי
+                folderCache[folderId] = data;
+                delete activePrefetches[folderId];
 
                 spinner.classList.add('hidden');
                 renderContent(data.folders, data.files);
 
+                // אם זו טעינת השורש הראשונית: נסיר את מסך הפתיחה ונתחיל "לטרוף" את שאר התיקיות ברקע
+                if (folderId === ROOT_FOLDER_ID && !isRootLoaded) {
+                    isRootLoaded = true;
+                    checkAndHideSplash();
+                    startBackgroundCrawler(data.folders);
+                }
+
             } catch (err) {
                 spinner.classList.add('hidden');
                 showError('שגיאה בטעינת התיקייה. ייתכן ואין הרשאות, או שיש בעיית תקשורת.');
+                
+                // במקרה של שגיאה - חייבים להעלים את המסך כדי שהמשתמש יראה אותה
+                if (!isRootLoaded) {
+                    isRootLoaded = true;
+                    checkAndHideSplash();
+                }
             }
+        }
+
+        // פונקציה חדשה: טעינה בסתר ברקע
+        function prefetchFolder(folderId) {
+            // אם זה כבר בזיכרון או שכבר יש בקשה שרצה - אל תעשה כלום
+            if (folderCache[folderId] || activePrefetches[folderId]) return;
+            
+            // מתחיל להוריד ברקע בלי לעצור את האתר
+            activePrefetches[folderId] = fetch(`${GAS_URL}?folderId=${folderId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.error) folderCache[folderId] = data; // שומר בזיכרון מראש!
+                    return data;
+                })
+                .catch(() => { delete activePrefetches[folderId]; });
+        }
+
+        // פונקציה חדשה: זחלן רקע חכם שטוען מראש את התיקיות הפנימיות באופן אוטומטי
+        function startBackgroundCrawler(folders) {
+            if (!folders || folders.length === 0) return;
+            
+            // עוברים על התיקיות שמופיעות כעת במסך
+            folders.forEach((folder, index) => {
+                // מפעילים את הטעינה המקדימה עם השהייה של חצי שנייה בין כל בקשה
+                // (כדי לא לשלוח 50 בקשות בבת אחת לגוגל ולגרום לחסימת האתר)
+                setTimeout(() => {
+                    prefetchFolder(folder.id);
+                }, index * 500); 
+            });
         }
 
         function renderBreadcrumbs() {
@@ -175,6 +286,13 @@
             folders.forEach(folder => {
                 const card = document.createElement('div');
                 card.className = 'fade-in bg-white p-5 rounded-2xl shadow-sm hover:shadow-md border border-slate-100 cursor-pointer transition-all transform hover:-translate-y-1 flex items-center gap-4 group';
+                
+                // --- מנגנון טעינה מקדימה (Prefetch) ---
+                // כשמעבירים עכבר על התיקייה - מתחיל להוריד את התוכן מיד
+                card.onmouseenter = () => prefetchFolder(folder.id);
+                // תמיכה בטלפונים (מתחיל להוריד ברגע שהאצבע נוגעת, לפני שחרור הלחיצה)
+                card.ontouchstart = () => prefetchFolder(folder.id);
+
                 card.onclick = () => {
                     navigationStack.push({ id: folder.id, name: folder.name });
                     loadFolder(folder.id);
@@ -238,7 +356,7 @@
             errorEl.classList.remove('hidden');
         }
 
-        // הפעלה
+        // הפעלה ראשונית של האפליקציה (הסרנו את פונקציית הטיימר הקשיחה שהייתה כאן קודם)
         initApp();
     </script>
 </body>
