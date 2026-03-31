@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מאגר הפודקאסטים - סייר הקבצים</title>
+    <title>מאגר הפודקאסטים - מהירות שיא</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap');
-        
         body { 
             font-family: 'Heebo', sans-serif; 
             background-color: #f8fafc;
@@ -15,335 +14,207 @@
             background-size: 32px 32px;
             padding-bottom: 60px;
         }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        iframe {
-            width: 100%;
-            height: 140px; 
-            border-radius: 12px;
-            border: none;
-            background-color: #f1f5f9;
-        }
-
-        /* הסתרת סרגל גלילה */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        iframe { width: 100%; height: 140px; border-radius: 12px; border: none; background-color: #f1f5f9; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen relative overflow-x-hidden selection:bg-indigo-100 selection:text-indigo-900">
     
-    <!-- מסך פתיחה (Splash Screen) -->
-    <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-700 bg-slate-900 overflow-hidden">
+    <!-- מסך פתיחה חכם -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-500 bg-slate-900">
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 opacity-95"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/20 rounded-full blur-[80px] animate-pulse"></div>
-        <div class="relative z-10 flex flex-col items-center fade-in">
-            <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center backdrop-blur-md border border-white/10 mb-8 shadow-2xl shadow-indigo-500/20 transform animate-[bounce_3s_infinite]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
+        <div class="relative z-10 flex flex-col items-center text-center">
+            <div class="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 mb-6 animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
             </div>
-            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 text-center drop-shadow-lg">מאגר הפודקאסטים</h1>
-            <div class="flex items-center gap-3 bg-white/5 px-5 py-2 rounded-full border border-white/5">
-                <div class="w-2 h-2 bg-indigo-400 rounded-full animate-ping"></div>
-                <p class="text-indigo-200 text-sm font-medium tracking-wide">מכין את חווית השמע...</p>
-            </div>
+            <h1 class="text-3xl font-black text-white mb-2">מאגר הפודקאסטים</h1>
+            <p id="splash-status" class="text-indigo-200 text-sm font-medium">טוען את מסד הנתונים...</p>
         </div>
     </div>
 
-    <!-- תפריט עליון -->
     <nav class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="font-black text-xl tracking-tight text-indigo-900 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="font-black text-xl text-indigo-900 flex items-center gap-2 cursor-pointer" onclick="goHome()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 סייר המאגר
             </div>
-            <a href="about.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors bg-slate-100 hover:bg-indigo-50 px-4 py-2 rounded-full">אודות והצטרפות</a>
+            <a href="about.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 bg-slate-100 px-4 py-2 rounded-full transition-colors">אודות והצטרפות</a>
         </div>
     </nav>
 
     <!-- באנר הודעות הנהלה -->
-    <div id="announcement-banner" class="hidden bg-yellow-50 border-b border-yellow-100 py-3 px-4 relative overflow-hidden">
+    <div id="announcement-banner" class="hidden bg-yellow-50 border-b border-yellow-100 py-3 px-4">
         <div class="max-w-7xl mx-auto flex items-center gap-3">
-            <span class="flex-shrink-0 bg-yellow-400 p-1 rounded-full text-yellow-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
-            </span>
             <p id="announcement-text" class="text-yellow-900 text-sm font-bold truncate"></p>
-            <button onclick="this.parentElement.parentElement.remove()" class="mr-auto text-yellow-700 hover:text-yellow-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-            </button>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- שורת חיפוש וסינון -->
-        <div class="mb-8 flex flex-col md:flex-row gap-4">
-            <div class="relative flex-1 group">
-                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                </div>
-                <input type="text" id="search-input" oninput="applyFilters()" placeholder="חפש בתוך התיקייה הזו..." class="block w-full bg-white border border-slate-200 rounded-2xl py-4 pr-11 pl-4 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- חיפוש גלובלי מיידי -->
+        <div class="mb-8 relative group">
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
-            <div class="flex gap-2">
-                <select id="sort-select" onchange="applyFilters()" class="bg-white border border-slate-200 rounded-2xl px-4 py-4 text-slate-600 font-bold focus:outline-none focus:border-indigo-500 shadow-sm cursor-pointer">
-                    <option value="newest">הכי חדש</option>
-                    <option value="oldest">הכי ישן</option>
-                    <option value="name">לפי שם (א-ת)</option>
-                </select>
-            </div>
+            <input type="text" id="search-input" oninput="handleSearch()" placeholder="חפש מיידית בכל עשרות אלפי הקבצים..." class="block w-full bg-white border border-slate-200 rounded-2xl py-4 pr-11 pl-4 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-sm transition-all">
         </div>
 
         <!-- פירורי לחם -->
-        <div class="bg-white/80 backdrop-blur-xl p-4 rounded-2xl shadow-sm border border-white mb-8 flex items-center gap-2 overflow-x-auto no-scrollbar whitespace-nowrap" id="breadcrumbs"></div>
+        <div class="bg-white/50 backdrop-blur-xl p-3 rounded-xl border border-white mb-6 flex items-center gap-2 overflow-x-auto no-scrollbar whitespace-nowrap" id="breadcrumbs"></div>
 
-        <div id="error-msg" class="hidden text-center text-red-600 bg-red-50 p-6 rounded-2xl border border-red-100 mb-8 font-medium"></div>
-
-        <!-- תצוגת טעינה -->
-        <div id="loading-spinner" class="hidden flex flex-col items-center justify-center py-20">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-indigo-600 mb-4"></div>
-            <p class="text-slate-500 font-bold">טוען נתונים מהדרייב...</p>
+        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- התוכן ייטען כאן מיידית מהזיכרון -->
         </div>
-
-        <!-- אזור התוכן -->
-        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </div>
-
-    <!-- קרדיט -->
-    <div class="w-full text-center text-slate-400 text-xs py-6 mt-8">
-        נוצר על ידי <a href="https://mytovmail.github.io/Good-heart/" target="_blank" class="text-indigo-400 hover:text-indigo-600 transition-colors font-bold">לב טוב</a>
     </div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyGIavueF5eYZP542khG6WSYztk-OA6wadPJp9pBiCvJpg--opvOmDm6iqvH4EWzoWGVA/exec'; 
-        const ROOT_FOLDER_ID = '1YvJzJJlKzKMunkYQWAqwFGK6VElIW-WT';
+        // מזהה תיקיית השורש (חייב להתאים למה שמוגדר בסקריפט העדכון)
+        const ROOT_ID = '1YvJzJJlKzKMunkYQWAqwFGK6VElIW-WT';
         
-        let navigationStack = [{ id: ROOT_FOLDER_ID, name: 'ראשי' }];
-        let folderCache = {}; 
-        let activePrefetches = {}; 
-        let currentFolderData = { folders: [], files: [] }; 
-        
+        let db = { folders: {}, files: {} }; // מסד הנתונים שיטען מהקובץ
+        let navigationStack = [{ id: ROOT_ID, name: 'ראשי' }];
         let isMember = false;
-        let siteConfig = { groupPassword: "", announcement: "" };
-
-        let minSplashTimePassed = false;
-        let isRootLoaded = false;
-        let splashDismissed = false;
-
-        setTimeout(() => {
-            minSplashTimePassed = true;
-            checkAndHideSplash();
-        }, 1500);
-
-        function checkAndHideSplash() {
-            if (minSplashTimePassed && isRootLoaded && !splashDismissed) {
-                const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 700);
-                }
-                splashDismissed = true;
-            }
-        }
+        let siteConfig = { groupPassword: "" };
 
         async function initApp() {
             try {
-                // הגנה מפני הרצה ב-Blob/Preview: מנסים לטעון רק אם אנחנו ב-HTTP/HTTPS
-                if (window.location.protocol.startsWith('http')) {
-                    const res = await fetch('config.json?v=' + new Date().getTime());
-                    if (res.ok) {
-                        siteConfig = await res.json();
-                        if (siteConfig.announcement && siteConfig.announcement.trim() !== '') {
-                            document.getElementById('announcement-text').textContent = siteConfig.announcement;
-                            document.getElementById('announcement-banner').classList.remove('hidden');
-                        }
+                // 1. טעינת הגדרות האתר
+                const configRes = await fetch('config.json?v=' + Date.now());
+                if (configRes.ok) {
+                    siteConfig = await configRes.json();
+                    if (siteConfig.announcement) {
+                        document.getElementById('announcement-text').textContent = siteConfig.announcement;
+                        document.getElementById('announcement-banner').classList.remove('hidden');
                     }
                 }
-                
-                const savedPassword = localStorage.getItem('site_password');
-                isMember = (savedPassword === siteConfig.groupPassword && siteConfig.groupPassword !== "");
-            } catch(e) { 
-                console.error("שגיאה בטעינת הגדרות", e); 
-            }
+                isMember = (localStorage.getItem('site_password') === siteConfig.groupPassword);
 
-            loadFolder(ROOT_FOLDER_ID);
+                // 2. טעינת מסד הנתונים הגדול מגיטהאב
+                document.getElementById('splash-status').textContent = "טוען אינדקס קבצים...";
+                const dbRes = await fetch('database.json?v=' + Date.now());
+                if (!dbRes.ok) throw new Error("מסד הנתונים לא נמצא");
+                db = await dbRes.json();
+
+                // סיום והצגת האתר
+                hideSplash();
+                renderFolder(ROOT_ID);
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('splash-status').innerHTML = "<span class='text-red-400'>שגיאה בטעינת הנתונים. נסה שוב.</span>";
+            }
         }
 
-        async function loadFolder(folderId) {
+        function hideSplash() {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.remove(), 500);
+        }
+
+        function renderFolder(folderId) {
             const grid = document.getElementById('content-grid');
-            const spinner = document.getElementById('loading-spinner');
-            
-            document.getElementById('error-msg').classList.add('hidden');
-            document.getElementById('search-input').value = ''; 
+            grid.innerHTML = '';
             renderBreadcrumbs();
 
-            if (folderCache[folderId]) {
-                currentFolderData = folderCache[folderId];
-                applyFilters();
+            // משיכת התוכן מה-DB המקומי (מיידי!)
+            const folderData = db.folders[folderId];
+            if (!folderData) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400">התיקייה לא נמצאה באינדקס.</div>';
+                return;
+            }
+
+            // הצגת תיקיות
+            folderData.subFolders.forEach(subId => {
+                const sub = db.folders[subId];
+                if (!sub) return;
+                const card = document.createElement('div');
+                card.className = 'fade-in bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all flex items-center gap-4 group';
+                card.onclick = () => {
+                    navigationStack.push({ id: subId, name: sub.name });
+                    renderFolder(subId);
+                };
+                card.innerHTML = `
+                    <div class="bg-indigo-50 p-3 rounded-xl text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
+                    </div>
+                    <div class="flex-1 overflow-hidden"><h3 class="font-bold text-slate-800 truncate">${sub.name}</h3></div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // הצגת קבצים
+            folderData.files.forEach(fileId => {
+                const file = db.files[fileId];
+                if (!file) return;
+                renderFileCard(file);
+            });
+        }
+
+        function renderFileCard(file) {
+            const grid = document.getElementById('content-grid');
+            const cleanName = file.name.replace(/\.[^/.]+$/, "");
+            const previewUrl = `https://drive.google.com/file/d/${file.id}/preview`;
+            const card = document.createElement('div');
+            card.className = 'fade-in bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col';
+            
+            let playerHTML = isMember ? `<iframe src="${previewUrl}" allow="autoplay" class="mt-4"></iframe>` : `
+                <div class="mt-4 h-[140px] bg-slate-50 rounded-xl flex items-center justify-center">
+                    <a href="about.html" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-full">התחבר להאזנה</a>
+                </div>`;
+
+            card.innerHTML = `
+                <div class="mb-2">
+                    <span class="text-[10px] font-bold text-slate-400 block mb-1 uppercase">קובץ שמע</span>
+                    <h3 class="font-bold text-slate-800 leading-tight line-clamp-2" title="${cleanName}">${cleanName}</h3>
+                </div>
+                ${playerHTML}
+            `;
+            grid.appendChild(card);
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            const grid = document.getElementById('content-grid');
+            
+            if (query.length < 2) {
+                renderFolder(navigationStack[navigationStack.length - 1].id);
                 return;
             }
 
             grid.innerHTML = '';
-            spinner.classList.remove('hidden');
-
-            try {
-                let data;
-                if (activePrefetches[folderId]) {
-                    data = await activePrefetches[folderId];
-                } else {
-                    const response = await fetch(`${GAS_URL}?folderId=${folderId}`);
-                    if (!response.ok) throw new Error("שגיאת רשת");
-                    data = await response.json();
-                }
-
-                if (data.error) throw new Error(data.error);
-
-                folderCache[folderId] = data;
-                currentFolderData = data;
-                delete activePrefetches[folderId];
-
-                spinner.classList.add('hidden');
-                applyFilters();
-
-                if (folderId === ROOT_FOLDER_ID && !isRootLoaded) {
-                    isRootLoaded = true;
-                    checkAndHideSplash();
-                    startBackgroundCrawler(data.folders);
-                }
-
-            } catch (err) {
-                spinner.classList.add('hidden');
-                showError('שגיאה בטעינת התיקייה.');
-                if (!isRootLoaded) { isRootLoaded = true; checkAndHideSplash(); }
-            }
-        }
-
-        function applyFilters() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const sortBy = document.getElementById('sort-select').value;
             
-            let filteredFolders = currentFolderData.folders.filter(f => f.name.toLowerCase().includes(searchTerm));
-            let filteredFiles = currentFolderData.files.filter(f => f.name.toLowerCase().includes(searchTerm));
-
-            if (sortBy === 'newest') {
-                filteredFiles.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
-            } else if (sortBy === 'oldest') {
-                filteredFiles.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
-            } else if (sortBy === 'name') {
-                filteredFiles.sort((a, b) => a.name.localeCompare(b.name));
-                filteredFolders.sort((a, b) => a.name.localeCompare(b.name));
-            }
-
-            renderContent(filteredFolders, filteredFiles);
-        }
-
-        function prefetchFolder(folderId) {
-            if (folderCache[folderId] || activePrefetches[folderId]) return;
-            activePrefetches[folderId] = fetch(`${GAS_URL}?folderId=${folderId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.error) folderCache[folderId] = data;
-                    return data;
-                })
-                .catch(() => { delete activePrefetches[folderId]; });
-        }
-
-        function startBackgroundCrawler(folders) {
-            if (!folders) return;
-            folders.forEach((folder, index) => {
-                setTimeout(() => prefetchFolder(folder.id), index * 500); 
+            // חיפוש גלובלי מהיר בזיכרון המקומי
+            let resultsCount = 0;
+            Object.values(db.files).forEach(file => {
+                if (file.name.toLowerCase().includes(query)) {
+                    if (resultsCount < 50) renderFileCard(file);
+                    resultsCount++;
+                }
             });
+
+            if (resultsCount === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400">לא נמצאו תוצאות לחיפוש זה.</div>';
+            }
         }
 
         function renderBreadcrumbs() {
             const container = document.getElementById('breadcrumbs');
             container.innerHTML = '';
-            navigationStack.forEach((navItem, index) => {
+            navigationStack.forEach((nav, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `font-bold ${index === navigationStack.length - 1 ? 'text-slate-800' : 'text-indigo-600 hover:text-indigo-800'}`;
-                btn.textContent = navItem.name;
+                btn.className = `text-sm font-bold ${idx === navigationStack.length - 1 ? 'text-slate-800' : 'text-indigo-600'}`;
+                btn.textContent = nav.name;
                 btn.onclick = () => {
-                    if (index < navigationStack.length - 1) {
-                        navigationStack = navigationStack.slice(0, index + 1);
-                        loadFolder(navItem.id);
-                    }
+                    navigationStack = navigationStack.slice(0, idx + 1);
+                    renderFolder(nav.id);
                 };
                 container.appendChild(btn);
-                if (index < navigationStack.length - 1) {
-                    const sep = document.createElement('span');
-                    sep.className = 'text-slate-300 mx-2';
-                    sep.textContent = '/';
-                    container.appendChild(sep);
-                }
+                if (idx < navigationStack.length - 1) container.innerHTML += '<span class="text-slate-300 mx-1">/</span>';
             });
         }
 
-        function renderContent(folders, files) {
-            const grid = document.getElementById('content-grid');
-            grid.innerHTML = '';
-            
-            if (folders.length === 0 && files.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center text-slate-400 py-12">לא נמצאו תוצאות בתיקייה זו.</div>';
-                return;
-            }
-
-            folders.forEach(folder => {
-                const card = document.createElement('div');
-                card.className = 'fade-in bg-white p-5 rounded-2xl shadow-sm hover:shadow-md border border-slate-100 cursor-pointer transition-all transform hover:-translate-y-1 flex items-center gap-4 group';
-                card.onmouseenter = () => prefetchFolder(folder.id);
-                card.onclick = () => {
-                    navigationStack.push({ id: folder.id, name: folder.name });
-                    loadFolder(folder.id);
-                };
-                card.innerHTML = `
-                    <div class="bg-indigo-50 p-3 rounded-xl text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
-                    </div>
-                    <div class="flex-1 overflow-hidden"><h3 class="font-bold text-slate-800 text-lg truncate">${folder.name}</h3><p class="text-xs text-slate-400 font-medium">תיקייה</p></div>
-                `;
-                grid.appendChild(card);
-            });
-
-            files.forEach(file => {
-                const cleanName = file.name.replace(/\.[^/.]+$/, "");
-                const formattedDate = new Date(file.createdTime).toLocaleDateString('he-IL');
-                const previewUrl = `https://drive.google.com/file/d/${file.id}/preview`;
-                const card = document.createElement('div');
-                card.className = 'fade-in bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between';
-                
-                let playerHTML = isMember ? `<iframe src="${previewUrl}" allow="autoplay" class="mt-4"></iframe>` : `
-                    <div class="relative mt-4 h-[140px] bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
-                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 backdrop-blur-sm z-10">
-                            <a href="about.html" class="bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-lg hover:bg-indigo-700 transition-colors">הצטרף להאזנה</a>
-                        </div>
-                    </div>`;
-
-                card.innerHTML = `
-                    <div class="mb-2">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="inline-flex items-center px-2 py-1 rounded text-[10px] font-bold bg-slate-100 text-slate-500">קובץ שמע</span>
-                            <span class="text-[11px] text-slate-400 font-medium">${formattedDate}</span>
-                        </div>
-                        <h3 class="font-bold text-slate-800 leading-snug line-clamp-2">${cleanName}</h3>
-                    </div>
-                    ${playerHTML}
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function showError(msg) {
-            const errorEl = document.getElementById('error-msg');
-            errorEl.textContent = msg;
-            errorEl.classList.remove('hidden');
-        }
+        function goHome() { navigationStack = [{ id: ROOT_ID, name: 'ראשי' }]; renderFolder(ROOT_ID); }
 
         initApp();
     </script>
