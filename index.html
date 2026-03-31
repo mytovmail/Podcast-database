@@ -160,25 +160,50 @@
                 return;
             }
 
-            const url = `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType,createdTime)&orderBy=createdTime+desc`;
-
             try {
-                const response = await fetch(url);
-                const data = await response.json();
+                // הפעלת הסריקה הרקורסיבית שסורקת גם תתי-תיקיות
+                allPodcasts = await fetchFilesRecursively(FOLDER_ID);
+                
+                // מיון ברירת מחדל של כל הקבצים מכל התיקיות: מהחדש לישן
+                allPodcasts.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
 
-                if (data.error) {
-                    showError(data.error.message);
-                    removeSkeletons();
-                    return;
-                }
-
-                allPodcasts = data.files.filter(file => file.mimeType.includes('audio') || file.mimeType.includes('video'));
                 applyFilters();
 
             } catch (err) {
-                showError('שגיאת תקשורת מול הדרייב.');
+                showError('שגיאת תקשורת מול הדרייב: ' + err.message);
                 removeSkeletons();
             }
+        }
+
+        // פונקציה חדשה ומשודרגת שסורקת תיקיות ותתי-תיקיות ללא הגבלה
+        async function fetchFilesRecursively(folderId) {
+            let filesFound = [];
+            
+            // שאילתה שמביאה את כל התוכן של התיקייה הספציפית (שאינו בפח האשפה)
+            const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${API_KEY}&fields=files(id,name,mimeType,createdTime)&pageSize=1000`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
+            const items = data.files || [];
+
+            // מעבר על כל הקבצים והתיקיות שנמצאו
+            for (const item of items) {
+                if (item.mimeType === 'application/vnd.google-apps.folder') {
+                    // אם זו תיקייה - ניכנס לתוכה ונסרוק גם אותה (רקורסיה)
+                    const subFiles = await fetchFilesRecursively(item.id);
+                    filesFound = filesFound.concat(subFiles);
+                } else if (item.mimeType.includes('audio') || item.mimeType.includes('video')) {
+                    // אם זה קובץ שמע/וידאו - נוסיף אותו לרשימה
+                    filesFound.push(item);
+                }
+            }
+
+            return filesFound;
         }
 
         function removeSkeletons() {
