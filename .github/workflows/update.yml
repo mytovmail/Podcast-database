@@ -4,10 +4,14 @@ on:
     - cron: '0 */2 * * *' # רץ כל שעתיים
   workflow_dispatch: # מאפשר להריץ ידנית דרך לשונית Actions
 
+# השורה הזו תעלים את אזהרת ה-Node.js המעצבנת בלוגים של גיטהאב
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    # הוספת הרשאות כתיבה לבוט - זה הפתרון לשגיאה 128
+    # הוספת הרשאות כתיבה לבוט
     permissions:
       contents: write
     
