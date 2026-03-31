@@ -20,15 +20,15 @@
         .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .8; transform: scale(1.05); } }
 
-        /* הגדרות גלילת טקסט לבאנר ההודעות */
+        /* הגדרות גלילת טקסט לבאנר ההודעות - מותאם לעברית */
         @keyframes scroll-text {
-            0% { transform: translateX(100vw); }
-            100% { transform: translateX(-100%); }
+            0%, 15% { transform: translateX(0); } /* עומד במקום לזמן קצר כדי שיתחילו לקרוא */
+            100% { transform: translateX(100%); } /* גולש ימינה עד שיוצא מהמסך */
         }
         .scroll-active {
             display: inline-block;
             white-space: nowrap;
-            animation: scroll-text 22s linear infinite;
+            animation: scroll-text 24s linear infinite;
             padding-left: 2rem;
         }
         .scroll-active:hover {
@@ -77,7 +77,7 @@
             </div>
             <div class="flex-1 overflow-hidden relative flex items-center h-6">
                 <!-- הטקסט יישתל כאן ויקבל סגנון דינמי מהקוד -->
-                <p id="announcement-text" class="text-orange-900 text-[15px] font-bold absolute"></p>
+                <p id="announcement-text" class="text-orange-900 text-[15px] font-bold absolute right-0"></p>
             </div>
         </div>
     </div>
@@ -149,7 +149,7 @@
                         if (siteConfig.announcement.length > 60) {
                             annText.classList.add('scroll-active');
                         } else {
-                            annText.classList.remove('absolute');
+                            annText.classList.remove('absolute', 'right-0');
                             annText.classList.add('w-full', 'text-center');
                         }
                         
