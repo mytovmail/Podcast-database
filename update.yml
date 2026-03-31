@@ -1,0 +1,31 @@
+name: Update Podcast Database
+on:
+  schedule:
+    - cron: '0 */2 * * *' # רץ כל שעתיים
+  workflow_dispatch: # מאפשר להריץ ידנית
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run update script
+        run: python update_db.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "Database Bot"
+          git config --global user.email "bot@github.com"
+          git add database.json
+          git commit -m "Auto-update database.json" || exit 0
+          git push
